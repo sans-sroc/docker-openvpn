@@ -1,4 +1,9 @@
 #!/bin/bash
+
+if [ "$DEBUG" == "1" ]; then
+    set -x
+fi
+
 set -e
 
 dir="$(dirname "$(readlink -f "$BASH_SOURCE")")"

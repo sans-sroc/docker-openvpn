@@ -35,4 +35,4 @@ jobs:
       - name: test
         env:
           DEBUG: "1"
-        run: bash test/run.sh ${{ steps.meta.outputs.tags }}
+        run: test/run.sh ${{ steps.meta.outputs.tags }}
