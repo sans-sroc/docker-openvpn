@@ -6,7 +6,7 @@ set -e
 OVPN_DATA="ovpn-revoke-test-data"
 CLIENT1="travis-client1"
 CLIENT2="travis-client2"
-IMG="kylemanna/openvpn"
+IMG=${IMG:="ghcr.io/sans-sroc/openvpn"}
 NAME="ovpn-revoke-test"
 CLIENT_DIR="$(readlink -f "$(dirname "$BASH_SOURCE")/../../client")"
 SERV_IP="$(ip -4 -o addr show scope global  | awk '{print $4}' | sed -e 's:/.*::' | head -n1)"
