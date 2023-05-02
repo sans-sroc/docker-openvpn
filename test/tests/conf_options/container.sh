@@ -13,7 +13,7 @@ test_config() {
     local needle="${2}"
     local file="${1}"
 
-    busybox grep -q "${needle}" "${file}"
+    grep -q "${needle}" "${file}"
     if [ $? -ne 0 ]; then
         abort "==> Config match not found: ${needle}"
     fi
@@ -26,7 +26,7 @@ test_not_config() {
     local needle="${2}"
     local file="${1}"
 
-    busybox grep -vq "${needle}" "${file}"
+    grep -vq "${needle}" "${file}"
     if [ $? -ne 0 ]; then
         abort "==> Config match found: ${needle}"
     fi
