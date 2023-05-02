@@ -33,4 +33,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: test
+        env:
+          DEBUG: "1"
         run: bash test/run.sh ${{ steps.meta.outputs.tags }}
