@@ -32,4 +32,4 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: test
-        run: bash test/run.sh -t ${{ steps.meta.outputs.tags[0] }}
+        run: bash test/run.sh -t ${{ steps.meta.outputs.tags }}
