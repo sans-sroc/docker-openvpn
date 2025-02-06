@@ -29,7 +29,7 @@ WORKDIR $workdir
 ENTRYPOINT ["$entrypoint"]
 EOD
 
-args=( -t --rm )
+args=( --rm )
 
 # there is strong potential for nokogiri+overlayfs failure
 # see https://github.com/docker-library/ruby/issues/55
