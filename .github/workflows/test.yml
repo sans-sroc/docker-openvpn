@@ -36,4 +36,5 @@ jobs:
       - name: test
         env:
           IMG: ${{ steps.meta.outputs.tags }}
+          DEBUG: 1
         run: test/run.sh ${{ steps.meta.outputs.tags }}
