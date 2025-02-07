@@ -5,7 +5,7 @@ set -e
 
 OVPN_DATA=basic-data-otp
 CLIENT=github-client
-IMG=${IMG:="kylemanna/openvpn"}
+IMG=${IMG:="ghcr.io/sans-sroc/openvpn"}
 OTP_USER=otp
 CLIENT_DIR="$(readlink -f "$(dirname "$BASH_SOURCE")/../../client")"
 
@@ -21,9 +21,9 @@ docker run -v $OVPN_DATA:/etc/openvpn --rm $IMG ovpn_genconfig -u udp://$SERV_IP
 docker run -v $OVPN_DATA:/etc/openvpn --rm $IMG cat /etc/openvpn/openvpn.conf | grep 'reneg-sec 0' || abort 'reneg-sec not set to 0 in server config'
 
 # nopass is insecure
-docker run -v $OVPN_DATA:/etc/openvpn --rm -it -e "DEBUG=$DEBUG" -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" $IMG ovpn_initpki nopass
+docker run -v $OVPN_DATA:/etc/openvpn --rm -e "DEBUG=$DEBUG" -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" $IMG ovpn_initpki nopass
 
-docker run -v $OVPN_DATA:/etc/openvpn --rm -it $IMG easyrsa build-client-full $CLIENT nopass
+docker run -v $OVPN_DATA:/etc/openvpn --rm -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" $IMG easyrsa build-client-full $CLIENT nopass
 
 # Generate OTP credentials for user named test, should return QR code for test user
 docker run -v $OVPN_DATA:/etc/openvpn --rm -it -e "DEBUG=$DEBUG" $IMG ovpn_otp_user $OTP_USER | tee $CLIENT_DIR/qrcode.txt

@@ -12,8 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        #test: [paranoid, conf_options, client, basic, dual-proto, otp, iptables, revocation]
-        test: [basic, client, conf_options, dual-proto, paranoid]
+        test: [basic, client, conf-options, dual-proto, iptables, otp, paranoid, revocation]
       fail-fast: false
     steps:
       - uses: actions/checkout@v3

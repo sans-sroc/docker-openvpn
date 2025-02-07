@@ -6,7 +6,7 @@ set -e
 OVPN_DATA="ovpn-revoke-test-data"
 CLIENT1="github-client1"
 CLIENT2="github-client2"
-IMG=${IMG:="kylemanna/openvpn"}
+IMG=${IMG:="ghcr.io/sans-sroc/openvpn"}
 NAME="ovpn-revoke-test"
 CLIENT_DIR="$(readlink -f "$(dirname "$BASH_SOURCE")/../../client")"
 SERV_IP="$(ip -4 -o addr show scope global  | awk '{print $4}' | sed -e 's:/.*::' | head -n1)"
@@ -16,7 +16,7 @@ SERV_IP="$(ip -4 -o addr show scope global  | awk '{print $4}' | sed -e 's:/.*::
 #
 docker volume create --name $OVPN_DATA
 docker run --rm -v $OVPN_DATA:/etc/openvpn $IMG ovpn_genconfig -u udp://$SERV_IP
-docker run --rm -v $OVPN_DATA:/etc/openvpn -it -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" $IMG ovpn_initpki nopass
+docker run --rm -v $OVPN_DATA:/etc/openvpn -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" $IMG ovpn_initpki nopass
 
 # Register clean-up function
 function finish {
@@ -47,7 +47,7 @@ fi
 #
 # Generate a first client certificate and configuration using $CLIENT1 as CN then revoke it.
 #
-docker exec -it $NAME easyrsa build-client-full $CLIENT1 nopass
+docker exec -it $NAME -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" easyrsa build-client-full $CLIENT1 nopass
 docker exec -it $NAME ovpn_getclient $CLIENT1 > $CLIENT_DIR/config.ovpn
 docker exec -it $NAME bash -c "echo 'yes' | ovpn_revokeclient $CLIENT1"
 
@@ -70,7 +70,7 @@ fi
 #
 # Generate and revoke a second client certificate using $CLIENT2 as CN, then test for failed client connection.
 #
-docker exec -it $NAME easyrsa build-client-full $CLIENT2 nopass
+docker exec -it $NAME -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" easyrsa build-client-full $CLIENT2 nopass
 docker exec -it $NAME ovpn_getclient $CLIENT2 > $CLIENT_DIR/config.ovpn
 docker exec -it $NAME bash -c "echo 'yes' | ovpn_revokeclient $CLIENT2"
 

@@ -6,7 +6,7 @@ set -e
 OVPN_DATA=dual-data
 CLIENT_UDP=github-client
 CLIENT_TCP=github-client-tcp
-IMG=${IMG:="kylemanna/openvpn"}
+IMG=${IMG:="ghcr.io/sans-sroc/openvpn"}
 CLIENT_DIR="$(readlink -f "$(dirname "$BASH_SOURCE")/../../client")"
 
 ip addr ls
