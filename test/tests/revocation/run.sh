@@ -47,9 +47,9 @@ fi
 #
 # Generate a first client certificate and configuration using $CLIENT1 as CN then revoke it.
 #
-docker exec -it $NAME -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" easyrsa build-client-full $CLIENT1 nopass
-docker exec -it $NAME ovpn_getclient $CLIENT1 > $CLIENT_DIR/config.ovpn
-docker exec -it $NAME bash -c "echo 'yes' | ovpn_revokeclient $CLIENT1"
+docker exec $NAME -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" easyrsa build-client-full $CLIENT1 nopass
+docker exec $NAME ovpn_getclient $CLIENT1 > $CLIENT_DIR/config.ovpn
+docker exec $NAME bash -c "echo 'yes' | ovpn_revokeclient $CLIENT1"
 
 # Determine IP address of container running daemon and update config
 for i in $(seq 10); do
@@ -70,9 +70,9 @@ fi
 #
 # Generate and revoke a second client certificate using $CLIENT2 as CN, then test for failed client connection.
 #
-docker exec -it $NAME -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" easyrsa build-client-full $CLIENT2 nopass
-docker exec -it $NAME ovpn_getclient $CLIENT2 > $CLIENT_DIR/config.ovpn
-docker exec -it $NAME bash -c "echo 'yes' | ovpn_revokeclient $CLIENT2"
+docker exec $NAME -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" easyrsa build-client-full $CLIENT2 nopass
+docker exec $NAME ovpn_getclient $CLIENT2 > $CLIENT_DIR/config.ovpn
+docker exec $NAME bash -c "echo 'yes' | ovpn_revokeclient $CLIENT2"
 
 # Determine IP address of container running daemon and update config
 for i in $(seq 10); do

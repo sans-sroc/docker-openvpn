@@ -26,7 +26,7 @@ docker run -v $OVPN_DATA:/etc/openvpn --rm -e "DEBUG=$DEBUG" -e "EASYRSA_BATCH=1
 docker run -v $OVPN_DATA:/etc/openvpn --rm -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" $IMG easyrsa build-client-full $CLIENT nopass
 
 # Generate OTP credentials for user named test, should return QR code for test user
-docker run -v $OVPN_DATA:/etc/openvpn --rm -it -e "DEBUG=$DEBUG" $IMG ovpn_otp_user $OTP_USER | tee $CLIENT_DIR/qrcode.txt
+docker run -v $OVPN_DATA:/etc/openvpn --rm -e "DEBUG=$DEBUG" $IMG ovpn_otp_user $OTP_USER | tee $CLIENT_DIR/qrcode.txt
 # Ensure a chart link is printed in client OTP configuration
 grep 'https://www.google.com/chart' $CLIENT_DIR/qrcode.txt || abort 'Link to chart not generated'
 grep 'Your new secret key is:' $CLIENT_DIR/qrcode.txt || abort 'Secret key is missing'
