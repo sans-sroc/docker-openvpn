@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-[ -n "${DEBUG+x}" ] && set -x
+[ -n "$DEBUG" ] && set -x
 
 OVPN_DATA=dual-data
-CLIENT_UDP=travis-client
-CLIENT_TCP=travis-client-tcp
-IMG=kylemanna/openvpn
+CLIENT_UDP=github-client
+CLIENT_TCP=github-client-tcp
+IMG=${IMG:="ghcr.io/sans-sroc/openvpn"}
 CLIENT_DIR="$(readlink -f "$(dirname "$BASH_SOURCE")/../../client")"
 
 ip addr ls
@@ -16,15 +16,15 @@ SERV_IP=$(ip -4 -o addr show scope global  | awk '{print $4}' | sed -e 's:/.*::'
 docker run -v $OVPN_DATA:/etc/openvpn --rm $IMG ovpn_genconfig -u tcp://$SERV_IP:443
 
 # nopass is insecure
-docker run -v $OVPN_DATA:/etc/openvpn --rm -it -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Travis-CI Test CA" $IMG ovpn_initpki nopass
+docker run -v $OVPN_DATA:/etc/openvpn --rm -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" $IMG ovpn_initpki nopass
 
 # gen TCP client
-docker run -v $OVPN_DATA:/etc/openvpn --rm -it $IMG easyrsa build-client-full $CLIENT_TCP nopass
+docker run -v $OVPN_DATA:/etc/openvpn --rm -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" $IMG easyrsa build-client-full $CLIENT_TCP nopass
 docker run -v $OVPN_DATA:/etc/openvpn --rm $IMG ovpn_getclient $CLIENT_TCP | tee $CLIENT_DIR/config-tcp.ovpn
 
 # switch to UDP config and gen UDP client
 docker run -v $OVPN_DATA:/etc/openvpn --rm $IMG ovpn_genconfig -u udp://$SERV_IP
-docker run -v $OVPN_DATA:/etc/openvpn --rm -it $IMG easyrsa build-client-full $CLIENT_UDP nopass
+docker run -v $OVPN_DATA:/etc/openvpn --rm -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" $IMG easyrsa build-client-full $CLIENT_UDP nopass
 docker run -v $OVPN_DATA:/etc/openvpn --rm $IMG ovpn_getclient $CLIENT_UDP | tee $CLIENT_DIR/config.ovpn
 
 #Verify client configs

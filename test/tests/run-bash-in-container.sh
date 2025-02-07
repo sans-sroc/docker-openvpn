@@ -1,4 +1,7 @@
 #!/bin/bash
+
+[ -n "$DEBUG" ] && set -x
+
 set -e
 
 testDir="$(readlink -f "$(dirname "$BASH_SOURCE")")"

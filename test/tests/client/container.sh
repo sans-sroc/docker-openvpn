@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[ -n "$DEBUG" ] && set -x
+
 SERV_IP=$(ip -4 -o addr show scope global  | awk '{print $4}' | sed -e 's:/.*::' | head -n1)
 SERVER_CONF="/etc/openvpn/openvpn.conf"
 TEST1_OVPN="/etc/openvpn/test1.ovpn"
@@ -14,7 +16,7 @@ test_config() {
     local needle="${2}"
     local file="${1}"
 
-    busybox grep -q "${needle}" "${file}"
+    grep -q "${needle}" "${file}"
     if [ $? -ne 0 ]; then
         abort "==> Config match not found: ${needle}"
     fi
@@ -27,7 +29,7 @@ test_not_config() {
     local needle="${2}"
     local file="${1}"
 
-    busybox grep -vq "${needle}" "${file}"
+    grep -vq "${needle}" "${file}"
     if [ $? -ne 0 ]; then
         abort "==> Config match found: ${needle}"
     fi
@@ -42,8 +44,10 @@ ovpn_genconfig \
     -u udp://$SERV_IP \
     -m 1337 \
 
+export EASYRSA_BATCH=1
+export EASYRSA_REQ_CN="Docker OpenVPN Test CA"
 
-EASYRSA_BATCH=1 EASYRSA_REQ_CN="Travis-CI Test CA" ovpn_initpki nopass
+EASYRSA_BATCH=1 EASYRSA_REQ_CN="Docker OpenVPN Test CA" ovpn_initpki nopass
 
 easyrsa build-client-full test1 nopass 2>/dev/null
 
@@ -63,7 +67,7 @@ test_config "${TEST1_OVPN}" "^tun-mtu\s\+1337"
 #
 ovpn_genconfig -u udp://$SERV_IP -E "remote $SERV_IP 443 tcp" -E "remote vpn.example.com 443 tcp"
 # nopass is insecure
-EASYRSA_BATCH=1 EASYRSA_REQ_CN="Travis-CI Test CA" ovpn_initpki nopass
+EASYRSA_BATCH=1 EASYRSA_REQ_CN="Docker OpenVPN Test CA" ovpn_initpki nopass
 easyrsa build-client-full client-fallback nopass
 ovpn_getclient client-fallback > "${TEST1_OVPN}"
 
@@ -76,7 +80,7 @@ test_config "${TEST1_OVPN}" "^remote\s\+vpn.example.com\s\+443\s\+tcp"
 #
 ovpn_genconfig -d -u udp://$SERV_IP -r "172.33.33.0/24" -r "172.34.34.0/24"
 # nopass is insecure
-EASYRSA_BATCH=1 EASYRSA_REQ_CN="Travis-CI Test CA" ovpn_initpki nopass
+EASYRSA_BATCH=1 EASYRSA_REQ_CN="Docker OpenVPN Test CA" ovpn_initpki nopass
 easyrsa build-client-full non-defroute nopass
 ovpn_getclient non-defroute > "${TEST1_OVPN}"
 

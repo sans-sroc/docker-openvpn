@@ -1,0 +1,18 @@
+{
+    "extends": [
+        "config:best-practices"
+    ],
+    "separateMultipleMajor": true,
+    "customManagers": [
+        {
+            "customType": "regex",
+            "fileMatch": [
+                ".github/workflows/*.yml$"
+            ],
+            "matchStrings": [
+                "\"(?<currentValue>.*)\"\\s#\\srenovate:\\sdatasource=(?<datasource>.*?)\\sdepName=(?<depName>.*)?(\\sversioning=(?<versioning>.*?))?\\s?"
+            ],
+            "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+        }
+    ]
+}

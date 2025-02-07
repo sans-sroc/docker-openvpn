@@ -4,6 +4,8 @@
 # Generate OpenVPN users via google authenticator
 #
 
+[ -n "$DEBUG" ] && set -x
+
 if ! source "$OPENVPN/ovpn_env.sh"; then
     echo "Could not source $OPENVPN/ovpn_env.sh."
     exit 1
