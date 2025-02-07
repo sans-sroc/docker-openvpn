@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[ -n "$DEBUG" ] && set -x
+
 SERV_IP=$(ip -4 -o addr show scope global  | awk '{print $4}' | sed -e 's:/.*::' | head -n1)
 SERVER_CONF="/etc/openvpn/openvpn.conf"
 TEST1_OVPN="/etc/openvpn/test1.ovpn"

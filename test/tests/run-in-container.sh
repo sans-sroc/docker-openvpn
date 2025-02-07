@@ -1,4 +1,7 @@
 #!/bin/bash
+
+[ -n "$DEBUG" ] && set -x
+
 set -e
 
 # NOT INTENDED TO BE USED AS A TEST "run.sh" DIRECTLY

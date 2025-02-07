@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-[ -n "${DEBUG+x}" ] && set -x
+[ -n "$DEBUG" ] && set -x
 
 OVPN_DATA="ovpn-revoke-test-data"
 CLIENT1="travis-client1"
@@ -16,7 +16,7 @@ SERV_IP="$(ip -4 -o addr show scope global  | awk '{print $4}' | sed -e 's:/.*::
 #
 docker volume create --name $OVPN_DATA
 docker run --rm -v $OVPN_DATA:/etc/openvpn $IMG ovpn_genconfig -u udp://$SERV_IP
-docker run --rm -v $OVPN_DATA:/etc/openvpn -it -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Travis-CI Test CA" $IMG ovpn_initpki nopass
+docker run --rm -v $OVPN_DATA:/etc/openvpn -it -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" $IMG ovpn_initpki nopass
 
 # Register clean-up function
 function finish {
