@@ -17,9 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        #basic, client, conf-options, dual-proto, iptables, otp, paranoid, 
-        test: [revocation]
-      fail-fast: false
+        test: [basic, client, conf-options, dual-proto, iptables, otp, paranoid, revocation]
     steps:
       - uses: actions/checkout@v3
       - name: Docker meta
