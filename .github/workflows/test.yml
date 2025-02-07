@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         #test: [paranoid, conf_options, client, basic, dual-proto, otp, iptables, revocation]
-        test: [basic]
+        test: [basic, client, conf_options, dual-proto, paranoid]
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
