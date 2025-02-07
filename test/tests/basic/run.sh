@@ -4,7 +4,7 @@ set -e
 [ -n "$DEBUG" ] && set -x
 
 OVPN_DATA=basic-data
-CLIENT=travis-client
+CLIENT=github-client
 IMG=${IMG:="kylemanna/openvpn"}
 CLIENT_DIR="$(readlink -f "$(dirname "$BASH_SOURCE")/../../client")"
 

@@ -4,8 +4,8 @@ set -e
 [ -n "$DEBUG" ] && set -x
 
 OVPN_DATA="ovpn-revoke-test-data"
-CLIENT1="travis-client1"
-CLIENT2="travis-client2"
+CLIENT1="github-client1"
+CLIENT2="github-client2"
 IMG=${IMG:="kylemanna/openvpn"}
 NAME="ovpn-revoke-test"
 CLIENT_DIR="$(readlink -f "$(dirname "$BASH_SOURCE")/../../client")"

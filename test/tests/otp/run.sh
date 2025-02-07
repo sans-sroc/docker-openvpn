@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-[ -n "${DEBUG+x}" ] && set -x
+[ -n "$DEBUG" ] && set -x
 
 OVPN_DATA=basic-data-otp
-CLIENT=travis-client
+CLIENT=github-client
 IMG=${IMG:="kylemanna/openvpn"}
 OTP_USER=otp
 CLIENT_DIR="$(readlink -f "$(dirname "$BASH_SOURCE")/../../client")"
