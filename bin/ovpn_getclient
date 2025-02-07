@@ -4,9 +4,7 @@
 # Get an OpenVPN client configuration file
 #
 
-if [ "$DEBUG" == "1" ]; then
-    set -x
-fi
+[ -n "$DEBUG" ] && set -x
 
 set -e
 

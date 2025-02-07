@@ -4,9 +4,7 @@
 # Initialize the EasyRSA PKI
 #
 
-if [ -n "$DEBUG" ]; then
-  set -x
-fi
+[ -n "$DEBUG" ] && set -x
 
 set -e
 
