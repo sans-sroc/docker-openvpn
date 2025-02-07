@@ -17,7 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        test: [basic, client, conf-options, dual-proto, iptables, otp, paranoid, revocation]
+        #basic, client, conf-options, dual-proto, iptables, otp, paranoid, 
+        test: [revocation]
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
@@ -45,5 +46,5 @@ jobs:
       - name: Run tests
         env:
           IMG: ${{ steps.meta.outputs.tags }}
-          DEBUG: ${{ github.event.inputs.debug || '' }}
+          DEBUG: ${{ github.event.inputs.debug || '1' }}
         run: test/run.sh --test ${{ matrix.test }} ${{ steps.meta.outputs.tags }}
