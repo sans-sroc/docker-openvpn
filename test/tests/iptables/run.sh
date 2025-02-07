@@ -19,20 +19,20 @@ docker run -d --name $NAME -v $OVPN_DATA:/etc/openvpn --cap-add=NET_ADMIN $IMG
 
 # check default iptables rules
 for i in $(seq 10); do
-    docker exec -ti $NAME bash -c 'source /etc/openvpn/ovpn_env.sh; exec iptables -t nat -C POSTROUTING -s $OVPN_SERVER -o eth0 -j MASQUERADE' && break
+    docker exec $NAME bash -c 'source /etc/openvpn/ovpn_env.sh; exec iptables -t nat -C POSTROUTING -s $OVPN_SERVER -o eth0 -j MASQUERADE' && break
     echo waiting for server start-up
     sleep 1
 done
 
 # append new setupIptablesAndRouting function to config
-docker exec -ti $NAME bash -c 'echo function setupIptablesAndRouting { iptables -t nat -A POSTROUTING -m comment --comment "test"\;} >> /etc/openvpn/ovpn_env.sh'
+docker exec $NAME bash -c 'echo function setupIptablesAndRouting { iptables -t nat -A POSTROUTING -m comment --comment "test"\;} >> /etc/openvpn/ovpn_env.sh'
 
 # kill server in preparation to modify config
 docker rm -f $NAME
 
 # check that overridden function exists and that test iptables rules is active
 docker run -d --name $NAME -v $OVPN_DATA:/etc/openvpn --cap-add=NET_ADMIN $IMG
-docker exec -ti $NAME bash -c 'source /etc/openvpn/ovpn_env.sh; type -t setupIptablesAndRouting && iptables -t nat -C POSTROUTING -m comment --comment "test"'
+docker exec $NAME bash -c 'source /etc/openvpn/ovpn_env.sh; type -t setupIptablesAndRouting && iptables -t nat -C POSTROUTING -m comment --comment "test"'
 
 #
 # kill server
