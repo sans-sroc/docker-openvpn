@@ -10,6 +10,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test: [paranoid, conf_options, client, basic, dual-proto, otp, iptables, revocation]
     steps:
       - uses: actions/checkout@v3
       - name: Docker meta
@@ -33,8 +36,8 @@ jobs:
           load: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - name: test
+      - name: Run tests
         env:
           IMG: ${{ steps.meta.outputs.tags }}
           DEBUG: 1
-        run: test/run.sh ${{ steps.meta.outputs.tags }}
+        run: test/run.sh --test ${{ matrix.test }} ${{ steps.meta.outputs.tags }}
