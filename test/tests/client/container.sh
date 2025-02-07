@@ -44,6 +44,8 @@ ovpn_genconfig \
     -u udp://$SERV_IP \
     -m 1337 \
 
+export EASYRSA_BATCH=1
+export EASYRSA_REQ_CN="Docker OpenVPN Test CA"
 
 EASYRSA_BATCH=1 EASYRSA_REQ_CN="Docker OpenVPN Test CA" ovpn_initpki nopass
 
