@@ -45,5 +45,5 @@ jobs:
       - name: Run tests
         env:
           IMG: ${{ steps.meta.outputs.tags }}
-          DEBUG: ${{ github.event.inputs.debug }}
+          DEBUG: ${{ github.event.inputs.debug || '' }}
         run: test/run.sh --test ${{ matrix.test }} ${{ steps.meta.outputs.tags }}
