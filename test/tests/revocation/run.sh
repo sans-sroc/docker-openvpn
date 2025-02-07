@@ -81,7 +81,7 @@ for i in $(seq 10); do
     sleep 0.1
 done
 
-if docker run --rm -v $CLIENT_DIR:/client --cap-add=NET_ADMIN -e DEBUG $IMG /client/wait-for-connect.sh; then
+if docker run --rm -v $CLIENT_DIR:/client --cap-add=NET_ADMIN -e "DEBUG=$DEBUG" $IMG /client/wait-for-connect.sh; then
     echo "Client was able to connect after revocation test #2." >&2
     exit 2
 fi
@@ -94,7 +94,7 @@ docker stop $NAME && docker start $NAME
 #
 # Test for failed connection using $CLIENT2 config again.
 #
-if docker run --rm -v $CLIENT_DIR:/client --cap-add=NET_ADMIN -e DEBUG $IMG /client/wait-for-connect.sh; then
+if docker run --rm -v $CLIENT_DIR:/client --cap-add=NET_ADMIN -e "DEBUG=$DEBUG" $IMG /client/wait-for-connect.sh; then
     echo "Client was able to connect after revocation test #3." >&2
     exit 2
 fi

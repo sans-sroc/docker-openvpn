@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-[ -n "${DEBUG+x}" ] && set -x
+[ -n "$DEBUG" ] && set -x
 
 OPENVPN_CONFIG=${1:-/client/config.ovpn}
 
