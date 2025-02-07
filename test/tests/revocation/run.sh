@@ -1,7 +1,8 @@
 #!/bin/bash
-set -e
 
 [ -n "$DEBUG" ] && set -x
+
+set -e
 
 OVPN_DATA="ovpn-revoke-test-data"
 CLIENT1="github-client1"
@@ -29,7 +30,7 @@ function finish {
 trap finish EXIT
 
 # Put the server in the background
-docker run -d -v $OVPN_DATA:/etc/openvpn --cap-add=NET_ADMIN --name $NAME $IMG
+docker run -d -v $OVPN_DATA:/etc/openvpn -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA"  --cap-add=NET_ADMIN --name $NAME $IMG
 
 #
 # Test that easy_rsa generate CRLs with 'next publish' set to 3650 days.
@@ -47,7 +48,7 @@ fi
 #
 # Generate a first client certificate and configuration using $CLIENT1 as CN then revoke it.
 #
-docker exec $NAME -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" easyrsa build-client-full $CLIENT1 nopass
+docker exec $NAME easyrsa build-client-full $CLIENT1 nopass
 docker exec $NAME ovpn_getclient $CLIENT1 > $CLIENT_DIR/config.ovpn
 docker exec $NAME bash -c "echo 'yes' | ovpn_revokeclient $CLIENT1"
 
@@ -70,7 +71,7 @@ fi
 #
 # Generate and revoke a second client certificate using $CLIENT2 as CN, then test for failed client connection.
 #
-docker exec $NAME -e "EASYRSA_BATCH=1" -e "EASYRSA_REQ_CN=Docker OpenVPN Test CA" easyrsa build-client-full $CLIENT2 nopass
+docker exec $NAME easyrsa build-client-full $CLIENT2 nopass
 docker exec $NAME ovpn_getclient $CLIENT2 > $CLIENT_DIR/config.ovpn
 docker exec $NAME bash -c "echo 'yes' | ovpn_revokeclient $CLIENT2"
 
